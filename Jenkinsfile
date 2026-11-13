@@ -8,7 +8,9 @@ pipeline {
 
     environment {
         HEADLESS = 'true'
-        PATH = "${env.HOME}/.local/bin:${env.PATH}"
+        // Повний шлях до Python (служба Jenkins не бачить PATH користувача)
+        PY = 'C:\\Users\\Pathetic_Box\\AppData\\Local\\Programs\\Python\\Python312\\python.exe'
+        PYTHONUTF8 = '1'
     }
 
     stages {
@@ -20,21 +22,22 @@ pipeline {
 
         stage('Static Code Analysis') {
             steps {
-                sh 'python3 -m pip install --user --break-system-packages pylint'
-                sh 'python3 -m pylint --disable=C,R,E0401 features pages'
+                bat '"%PY%" -m venv venv'
+                bat 'venv\\Scripts\\python -m pip install pylint'
+                bat 'venv\\Scripts\\python -m pylint --disable=C,R,E0401 features pages'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh 'python3 -m pip install --user --break-system-packages -r requirements.txt'
+                bat 'venv\\Scripts\\python -m pip install -r requirements.txt'
             }
         }
 
         stage('Run UI Tests') {
             steps {
                 catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                    sh 'python3 -m behave -f allure_behave.formatter:AllureFormatter -o allure-results -f pretty'
+                    bat 'venv\\Scripts\\python -m behave -f allure_behave.formatter:AllureFormatter -o allure-results -f pretty'
                 }
             }
         }
