@@ -7,10 +7,10 @@ pipeline {
     }
 
     environment {
-        HEADLESS = 'true'
-        // Повний шлях до Python (служба Jenkins не бачить PATH користувача)
-        PY = 'C:\\Users\\Pathetic_Box\\AppData\\Local\\Programs\\Python\\Python312\\python.exe'
-        PYTHONUTF8 = '1'
+    HEADLESS = 'true'
+    PY = 'C:\\Users\\Pathetic_Box\\AppData\\Local\\Programs\\Python\\Python312\\python.exe'
+    PYTHONUTF8 = '1'
+    PATH = "C:\\Windows\\System32;C:\\Windows;C:\\Windows\\System32\\WindowsPowerShell\\v1.0;${env.PATH}"
     }
 
     stages {
